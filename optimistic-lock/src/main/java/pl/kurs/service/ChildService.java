@@ -20,6 +20,11 @@ public class ChildService {
     private final ChildRepository childRepository;
     private final MotherRepository motherRepository;
 
+    @Transactional(readOnly = true)
+    public ChildDto getChildById(int id) {
+        return ChildDto.from(childRepository.findById(id).orElseThrow());
+    }
+
     @Transactional
     public ChildDto createChild (CreateChildCommand command) {
         Mother mother = motherRepository.findById(command.getMotherId()).orElseThrow();
@@ -35,7 +40,6 @@ public class ChildService {
         copy.setWeight(command.getWeight());
         copy.setHeight(command.getHeight());
         copy.setVersion(command.getVersion());
-
         return ChildDto.from(childRepository.saveAndFlush(copy));
 
     }
